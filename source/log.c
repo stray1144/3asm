@@ -1,0 +1,48 @@
+#include "3asm.h"
+#include <libvacant/libvacant.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+
+// wrappers for libvacant
+
+#define ESCAPE_RESET "\x1b[0m"
+#define ESCAPE_UNDERLINED "\x1b[1;4m"
+
+#define ESCAPE_FOREGROUND_BLACK "\x1b[1;30m"
+
+#define ESCAPE_FOREGROUND_WHITE "\x1b[1;38;5;231m"
+#define ESCAPE_BACKGROUND_WHITE "\x1b[1;48;5;231m"
+
+#define ESCAPE_FOREGROUND_RED "\x1b[1;31m"
+#define ESCAPE_BACKGROUND_RED "\x1b[1;41m"
+
+#define ESCAPE_BACKGROUND_BLUE "\x1b[1;44m"
+
+#define ESCAPE_BACKGROUND_CYAN "\x1b[1;46m"
+
+#define ESCAPE_BACKGROUND_GRAY "\x1b[1;100m"
+
+static char *level_labels[LOGGER_LEVEL_COUNT] = {
+        "   ???   " ESCAPE_RESET,
+        ESCAPE_FOREGROUND_RED ESCAPE_BACKGROUND_WHITE "  FATAL  " ESCAPE_RESET,
+        ESCAPE_FOREGROUND_WHITE ESCAPE_BACKGROUND_RED "  ERROR  " ESCAPE_RESET,
+        " WARNING " ESCAPE_RESET,
+        " VERBOSE " ESCAPE_RESET,
+        "  DEBUG  " ESCAPE_RESET
+};
+
+void logger_wrapper(context_t *context, logger_level_t level, char *prefix, char *format, ...) {
+        va_list arguments;
+
+        char message[LOGGER_MESSAGE_BUFFER_SIZE];
+        memset(message, 0, LOGGER_MESSAGE_BUFFER_SIZE);
+
+        va_start(arguments, format);
+        vsnprintf(message, LOGGER_MESSAGE_BUFFER_SIZE, format, arguments);
+        va_end(arguments);
+
+        logger_message(&context->logger, level, "");
+        logger_message(&context->logger, level, "  %s " ESCAPE_FOREGROUND_WHITE ESCAPE_BACKGROUND_GRAY "  %s  " ESCAPE_RESET, level_labels[level], prefix);
+        logger_message(&context->logger, level, "  " ESCAPE_FOREGROUND_WHITE ESCAPE_UNDERLINED "%s" ESCAPE_RESET, message);
+}
