@@ -1,7 +1,8 @@
 CC = clang
-CFLAGS = -Wall -Wextra -Wpedantic
+CFLAGS = -std=c23 -Wall -Wextra -Wpedantic
 
-SOURCE := source/3asm.c
+LIBRARIES := -lvacant -lcxsh
+SOURCE := source/3asm.c source/log.c
 OBJECTS := $(patsubst source/%.c, build/objects/%.o, $(SOURCE))
 
 OUTPUT := 3asm
@@ -11,7 +12,7 @@ OUTPUT := 3asm
 all: build/$(OUTPUT) 
 
 build/$(OUTPUT): $(OBJECTS)
-	@$(CC) $^ -o $@
+	@$(CC) $^ $(LIBRARIES) -o $@
 
 build/objects/%.o: source/%.c | build 
 	@$(CC) $(CFLAGS) -c $< -o $@
