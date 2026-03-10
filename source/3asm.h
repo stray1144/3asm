@@ -19,5 +19,14 @@ typedef struct context_s {
         semantizer_t semantizer;
 } context_t;
 
+#define SYSTEM_LOGGER(name) system_##name(context_t *context, char *prefix, char *format, ...)
+
+void SYSTEM_LOGGER(fatal); // system_fatal()
+void SYSTEM_LOGGER(error); // system_error()
+void SYSTEM_LOGGER(warn); // system_warn()
+void SYSTEM_LOGGER(info); // system_info()
+void SYSTEM_LOGGER(verbose); // system_verbose()
+void SYSTEM_LOGGER(debug); // system_debug()
+
 
 #endif

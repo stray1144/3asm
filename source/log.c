@@ -32,17 +32,31 @@ static char *level_labels[LOGGER_LEVEL_COUNT] = {
         "  DEBUG  " ESCAPE_RESET
 };
 
-void logger_wrapper(context_t *context, logger_level_t level, char *prefix, char *format, ...) {
-        va_list arguments;
 
-        char message[LOGGER_MESSAGE_BUFFER_SIZE];
-        memset(message, 0, LOGGER_MESSAGE_BUFFER_SIZE);
 
-        va_start(arguments, format);
-        vsnprintf(message, LOGGER_MESSAGE_BUFFER_SIZE, format, arguments);
-        va_end(arguments);
 
+void logger_wrapper(context_t *context, logger_level_t level, char *prefix, char *message) {
         logger_message(&context->logger, level, "");
         logger_message(&context->logger, level, "  %s " ESCAPE_FOREGROUND_WHITE ESCAPE_BACKGROUND_GRAY "  %s  " ESCAPE_RESET, level_labels[level], prefix);
-        logger_message(&context->logger, level, "  " ESCAPE_FOREGROUND_WHITE ESCAPE_UNDERLINED "%s" ESCAPE_RESET, message);
+        logger_message(&context->logger, level, ESCAPE_FOREGROUND_WHITE "  » " ESCAPE_UNDERLINED "%s" ESCAPE_RESET, message);
 }
+
+#define DEFINE_SYSTEM_LOGGER(name, level) \
+void SYSTEM_LOGGER(name) { \
+        va_list arguments; \
+        char message[LOGGER_MESSAGE_BUFFER_SIZE]; \
+        memset(message, 0, LOGGER_MESSAGE_BUFFER_SIZE); \
+        va_start(arguments, format); \
+        vsnprintf(message, LOGGER_MESSAGE_BUFFER_SIZE, format, arguments); \
+        va_end(arguments); \
+        logger_wrapper(context, level, prefix, message); \
+} \
+
+
+DEFINE_SYSTEM_LOGGER(fatal, LOGGER_FATAL)
+DEFINE_SYSTEM_LOGGER(error, LOGGER_ERROR)
+DEFINE_SYSTEM_LOGGER(warn, LOGGER_WARN)
+DEFINE_SYSTEM_LOGGER(info, LOGGER_INFO)
+DEFINE_SYSTEM_LOGGER(verbose, LOGGER_VERBOSE)
+DEFINE_SYSTEM_LOGGER(debug, LOGGER_DEBUG)
+
