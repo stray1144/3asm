@@ -37,10 +37,18 @@ void shutdown(context_t *context, int exit_code) {
         exit(exit_code);
 }
 
+void help(context_t *context) {
+        system_error(context, "help", "not implemented");
+}
+
 int main(int argc, char **argv) {
         context_t context = {0};
-        if(context_minimal_init(&context, argc, argv)) shutdown(&context, -1);
+        if(!context_minimal_init(&context, argc, argv)) shutdown(&context, -1);
 
+        if(parameter_probe(&context.AP, "help", PARAMETER_FLAG)) {
+                help(&context);
+                shutdown(&context, 0);
+        }
 
         shutdown(&context, 0);
 }
