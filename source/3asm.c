@@ -12,14 +12,26 @@ bool context_minimal_init(context_t *context) {
 
         context_minimal_clear(context);
 
-        logger_init(&context->logger, LOGGER_WARN);
+        bool result;
+        
+        result = logger_init(&context->logger, LOGGER_DEBUG);
+        if(result == false) {
+                printf("Couldn't init the logger...\n");
+                return false;
+        }
 
         return true;
 }
 
+void shutdown(context_t *context, int exit_code) {
+        context_minimal_clear(context);
+        exit(exit_code);
+}
+
 int main(void) {
         context_t context = {0};
-        context_minimal_init(&context);
+        if(context_minimal_init(&context)) shutdown(&context, -1);
 
-        context_minimal_clear(&context);
+
+        shutdown(&context, 0);
 }
