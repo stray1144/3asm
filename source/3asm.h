@@ -17,7 +17,10 @@ typedef struct settings_s {
 typedef struct context_s {
         logger_t logger;
         argument_parser_t AP;
+        
         settings_t settings;
+
+        char *file_data;
         lexer_t lexer;
         semantizer_t semantizer;
 } context_t;
