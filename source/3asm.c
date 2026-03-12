@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
         if(parameter_probe(&context.AP, "verbose", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_VERBOSE);
         if(parameter_probe(&context.AP, "debug", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_DEBUG);
         if(parameter_probe(&context.AP, "quiet", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_SILENT);
+        if(parameter_probe(&context.AP, "timestamp", PARAMETER_FLAG)) context.settings.logger_timestamp = true;
 
         translation_unit_assemble(&context, nullptr, parameter_positional_get(&context.AP, 1));
 

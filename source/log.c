@@ -42,11 +42,26 @@ static char *level_labels[LOGGER_LEVEL_COUNT] = {
         ESCAPE_FOREGROUND_WHITE ESCAPE_BACKGROUND_GRAY   "    DEBUG    " ESCAPE_RESET
 };
 
+#define TIMESTAMP_BUFFER_SIZE 1024
 
+void timestamp_get(char *buffer, size_t size) {
+        time_t current_time;
+        time(&current_time); // or current_time = time(NULL);
 
+        struct tm *local = localtime(&current_time);
+
+        memset(buffer, 0, size);
+        strftime(buffer, size, "%d/%m/%y %H:%M:%S", local);
+
+}
 
 void logger_wrapper(context_t *context, logger_level_t level, char *prefix, char *message) {
         logger_message(&context->logger, level, "");
+        if(context->settings.logger_timestamp) {
+                char timestamp[TIMESTAMP_BUFFER_SIZE];
+                timestamp_get(timestamp, TIMESTAMP_BUFFER_SIZE);
+                logger_message(&context->logger, level, "  " ESCAPE_FOREGROUND_BLACK ESCAPE_BACKGROUND_WHITE "  %s  " ESCAPE_RESET, timestamp);
+        }
         logger_message(&context->logger, level, "  %s " ESCAPE_FOREGROUND_WHITE ESCAPE_BACKGROUND_GRAY "  %s  " ESCAPE_RESET, level_labels[level], prefix);
         logger_message(&context->logger, level, ESCAPE_FOREGROUND_WHITE "  » " ESCAPE_UNDERLINED "%s" ESCAPE_RESET, message);
 }
