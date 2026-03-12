@@ -21,6 +21,7 @@ typedef struct context_s {
         settings_t settings;
 
         char *file_data;
+        buffer_t tokens; // buffer<lexer_token_t>
         lexer_t lexer;
         semantizer_t semantizer;
 } context_t;

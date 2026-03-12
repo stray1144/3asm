@@ -33,6 +33,8 @@ void context_assembler_clear(context_t *context) {
         context->file_data = nullptr;
 
         lexer_clear(&context->lexer);
+
+        buffer_clear(&context->tokens);
 }
 
 bool context_assembler_init(context_t *context, char *source_path) {
@@ -56,7 +58,11 @@ bool context_assembler_init(context_t *context, char *source_path) {
                 return false;
         }
 
-
+        result = buffer_init(&context->tokens, sizeof(lexer_token_t));
+        if(result == false) {
+                system_fatal(context, "lexer", "Couldn't init the token buffer");
+                return false;
+        }
 
         return true;
 }
