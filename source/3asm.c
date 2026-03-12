@@ -53,5 +53,8 @@ int main(int argc, char **argv) {
                 shutdown(&context, 0);
         }
 
+        if(parameter_probe(&context.AP, "verbose", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_VERBOSE);
+        if(parameter_probe(&context.AP, "debug", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_DEBUG);
+
         shutdown(&context, 0);
 }
