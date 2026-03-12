@@ -60,7 +60,7 @@ bool context_assembler_init(context_t *context, char *source_path) {
 
         result = buffer_init(&context->tokens, sizeof(lexer_token_t));
         if(result == false) {
-                system_fatal(context, "lexer", "Couldn't init the token buffer");
+                system_fatal(context, "lexer", "Couldn't init the token buffer...");
                 return false;
         }
 
