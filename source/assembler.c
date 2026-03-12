@@ -55,3 +55,20 @@ bool context_assembler_init(context_t *context, char *source_path) {
         return true;
 }
 
+bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path) {
+        if(source_path == nullptr) {
+                system_error(context, "file", "No file");
+                return false;
+        }
+
+        if(context_assembler_init(context, source_path) == false) {
+                context_assembler_clear(context);
+                return false;
+        }
+
+        system_verbose(context, "file", "Assembling %s...", source_path);
+
+        context_assembler_clear(context);
+
+        return true;
+}
