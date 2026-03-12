@@ -67,7 +67,10 @@ int main(int argc, char **argv) {
                 shutdown(&context, -1);
         }
 
-        translation_unit_assemble(&context, &translation_unit, path);
+        if(translation_unit_assemble(&context, &translation_unit, path) == false) {
+                translation_unit_clear(&translation_unit);
+                shutdown(&context, -1);
+        }
 
         translation_unit_clear(&translation_unit);
 
