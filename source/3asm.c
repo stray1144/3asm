@@ -58,7 +58,18 @@ int main(int argc, char **argv) {
         if(parameter_probe(&context.AP, "quiet", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_SILENT);
         if(parameter_probe(&context.AP, "timestamp", PARAMETER_FLAG)) context.settings.logger_timestamp = true;
 
-        translation_unit_assemble(&context, nullptr, parameter_positional_get(&context.AP, 1));
+        translation_unit_t translation_unit = {0};
+
+        char *path = parameter_positional_get(&context.AP, 1);
+
+        if(translation_unit_init(&translation_unit, path) == false) {
+                system_error(&context, "translation unit", "Couldn't init translation unit...");
+                shutdown(&context, -1);
+        }
+
+        translation_unit_assemble(&context, &translation_unit, path);
+
+        translation_unit_clear(&translation_unit);
 
         shutdown(&context, 0);
 }
