@@ -28,6 +28,17 @@ typedef struct symbol_s {
         reo_offset_t location;
 } symbol_t;
 
+typedef struct translation_unit_s {
+        char *name;
+        buffer_t code_section; // buffer<uint8_t>
+        buffer_t data_section; // buffer<uint8_t>
+        reo_size_t block;
+        buffer_t symbols;      // buffer<symbol_t>
+        buffer_t relocations;  // buffer<symbol_t>
+} translation_unit_t;
+
+bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path);
+
 #define SYSTEM_LOGGER(name) system_##name(context_t *context, char *prefix, char *format, ...)
 
 void SYSTEM_LOGGER(fatal); // system_fatal()
