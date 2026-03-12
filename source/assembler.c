@@ -26,3 +26,32 @@ char *file_read(char *path) {
         return buffer;
 }
 
+void context_assembler_clear(context_t *context) {
+        if(context == nullptr) return;
+
+        free(context->file_data);
+        context->file_data = nullptr;
+
+        lexer_clear(&context->lexer);
+}
+
+bool context_assembler_init(context_t *context, char *source_path) {
+        if(context == nullptr) return false;
+
+        context_assembler_clear(context);
+
+        context->file_data = file_read(source_path);
+        if(context->file_data == nullptr) {
+                system_error(context, "file", "Couldn't read %s...", source_path);
+                return false;
+        }
+
+        system_debug(context, "file", "%s", context->file_data);
+        // TODO: multiline logger format
+
+
+
+
+        return true;
+}
+
