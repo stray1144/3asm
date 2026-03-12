@@ -22,6 +22,12 @@ typedef struct context_s {
         semantizer_t semantizer;
 } context_t;
 
+typedef struct symbol_s {
+        char *name;
+        uint32_t section;
+        reo_offset_t location;
+} symbol_t;
+
 #define SYSTEM_LOGGER(name) system_##name(context_t *context, char *prefix, char *format, ...)
 
 void SYSTEM_LOGGER(fatal); // system_fatal()
