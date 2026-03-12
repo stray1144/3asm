@@ -49,6 +49,12 @@ bool context_assembler_init(context_t *context, char *source_path) {
         system_debug(context, "file", "%s", context->file_data);
         // TODO: multiline logger format
 
+        bool result;
+        result = lexer_init(&context->lexer, context->file_data);
+        if(result == false) {
+                system_fatal(context, "lexer", "Couldn't init the lexer...");
+                return false;
+        }
 
 
 
