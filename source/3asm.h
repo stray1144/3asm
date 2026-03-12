@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Stray1144
+// SPDX-License-Identifier: GPL-3.0-or-later
+
 #if !defined(__3Asm)
 #define __3Asm
 
