@@ -4,6 +4,7 @@
 #include "3asm.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 
 size_t file_size_get(char *path) {
@@ -65,6 +66,36 @@ bool context_assembler_init(context_t *context, char *source_path) {
         }
 
         return true;
+}
+
+
+void translation_unit_clear(translation_unit_t *translation_unit) {
+        if(translation_unit == nullptr) return;
+
+        buffer_clear(&translation_unit->code_section);
+        buffer_clear(&translation_unit->data_section);
+
+        buffer_clear(&translation_unit->symbols);
+        buffer_clear(&translation_unit->relocations);
+
+        memset(translation_unit, 0, sizeof(translation_unit_t));
+}
+
+bool translation_unit_init(translation_unit_t *translation_unit, char *name) {
+        if(translation_unit == nullptr) return false;
+
+        translation_unit_clear(translation_unit);
+
+        translation_unit->name = name;
+
+        bool result = true;
+        result &= buffer_init(&translation_unit->code_section, sizeof(uint8_t));
+        result &= buffer_init(&translation_unit->data_section, sizeof(uint8_t));
+
+        result &= buffer_init(&translation_unit->symbols, sizeof(symbol_t));
+        result &= buffer_init(&translation_unit->relocations, sizeof(symbol_t));
+
+        return result;
 }
 
 bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path) {

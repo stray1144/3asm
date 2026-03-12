@@ -41,6 +41,9 @@ typedef struct translation_unit_s {
         buffer_t relocations;  // buffer<symbol_t>
 } translation_unit_t;
 
+bool translation_unit_init(translation_unit_t *translation_unit, char *name);
+void translation_unit_clear(translation_unit_t *translation_unit);
+
 bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path);
 
 #define SYSTEM_LOGGER(name) system_##name(context_t *context, char *prefix, char *format, ...)
