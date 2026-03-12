@@ -20,7 +20,7 @@ bool context_minimal_init(context_t *context, int argc, char **argv) {
 
         bool result;
         
-        result = logger_init(&context->logger, LOGGER_DEBUG);
+        result = logger_init(&context->logger, LOGGER_WARN);
         if(result == false) {
                 printf("Couldn't init the logger...\n");
                 return false;
