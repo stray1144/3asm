@@ -32,6 +32,27 @@ typedef struct symbol_s {
         reo_offset_t location;
 } symbol_t;
 
+enum semantizer_unit_kind_e : uint32_t {
+        SEMANTIC_IDENTIFIER,
+        SEMANTIC_NUMBER,
+        SEMANTIC_COMMENT,
+        SEMANTIC_NEWLINE,
+
+        SEMANTIC_AT,
+        SEMANTIC_DOLLAR,
+        SEMANTIC_PERCENT,
+        SEMANTIC_COMMA,
+        SEMANTIC_DOT,
+
+        SEMANTIC_LPAREN,
+        SEMANTIC_RPAREN,
+        SEMANTIC_LESSER,
+        SEMANTIC_GREATER,
+
+        SEMANTIC_PLUS,
+        SEMANTIC_MINUS
+};
+
 typedef struct translation_unit_s {
         char *name;
         buffer_t code_section; // buffer<uint8_t>
