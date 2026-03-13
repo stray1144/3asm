@@ -33,6 +33,7 @@ typedef struct symbol_s {
 } symbol_t;
 
 enum semantizer_unit_kind_e : uint32_t {
+        SEMANTIC_UNKNOWN,
         SEMANTIC_IDENTIFIER,
         SEMANTIC_NUMBER,
         SEMANTIC_COMMENT,
