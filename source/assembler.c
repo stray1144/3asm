@@ -132,6 +132,10 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
 
         tokens_get(context);
 
+        semantizer_forge_setup(&context->semantizer, forge_callbacks, FORGE_CALLBACK_COUNT);
+        semantizer_forge_atomize(&context->semantizer, context->tokens.data, context->tokens.used);
+
+
         context_assembler_clear(context);
 
         return true;

@@ -53,6 +53,10 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_MINUS
 };
 
+
+#define FORGE_CALLBACK_COUNT 4
+extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
+
 typedef struct translation_unit_s {
         char *name;
         buffer_t code_section; // buffer<uint8_t>
