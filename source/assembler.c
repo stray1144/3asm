@@ -121,6 +121,10 @@ void tokens_get(context_t *context) {
         }
 }
 
+void system_semantizer(context_t *context, char *message) {
+        system_debug(context, "semantizer", "%s", message);
+}
+
 bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path) {
         if(source_path == nullptr) {
                 system_error(context, "file", "No file");
@@ -136,9 +140,18 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
 
         tokens_get(context);
 
-        semantizer_forge_setup(&context->semantizer, forge_callbacks, FORGE_CALLBACK_COUNT);
-        semantizer_forge_atomize(&context->semantizer, context->tokens.data, context->tokens.used);
+        semantizer_debug_setup(&context->semantizer, 
+                               true, 
+                               semantic_names, 9, 
+                               (semantizer_log_callback_t *)system_semantizer, context);
 
+        semantizer_forge_setup(&context->semantizer, forge_callbacks, FORGE_CALLBACK_COUNT);
+        semantizer_forge_result_t forge_result = semantizer_forge_atomize(&context->semantizer, context->tokens.data, context->tokens.used);
+        if(forge_result.status != FORGE_SUCCESS) {
+                // lexer_token_t *at = buffer_get(&context->tokens, forge_result.at);
+                // TODO: change to "<file> <line>:<column> Unhandled <type> token", these are merely placeholders
+                system_error(context, "semantizer", "%s:_:_ Unhandled _ token", source_path);
+        }
 
         context_assembler_clear(context);
 
