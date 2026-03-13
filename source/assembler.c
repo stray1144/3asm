@@ -96,6 +96,27 @@ bool translation_unit_init(translation_unit_t *translation_unit, char *name) {
         return result;
 }
 
+static char *lexer_token_kind_names[LEXER_TOKEN_KIND_COUNT] = {
+        "undefined",
+        "comment",
+        "identifier",
+        "float",
+        "hexadecimal",
+        "integer",
+        "string",
+        "punctuation",
+        "newline"
+};
+
+void tokens_get(context_t *context) {
+        lexer_token_t token = {0};
+
+        while(lex(&context->lexer, &token)) {
+                system_debug(context, "lexer", "%s@%d", lexer_token_kind_names[token.kind], token.position);
+                buffer_append(&context->tokens, &token, 1);
+        }
+}
+
 bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path) {
         if(source_path == nullptr) {
                 system_error(context, "file", "No file");
@@ -108,6 +129,8 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
         }
 
         system_verbose(context, "file", "Assembling %s...", source_path);
+
+        tokens_get(context);
 
         context_assembler_clear(context);
 
