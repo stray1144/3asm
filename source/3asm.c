@@ -17,17 +17,13 @@ bool context_minimal_init(context_t *context, int argc, char **argv) {
         if(context == nullptr) return false;
 
         context_minimal_clear(context);
-
-        bool result;
         
-        result = logger_init(&context->logger, LOGGER_WARN);
-        if(result == false) {
+        if(logger_init(&context->logger, LOGGER_WARN) == false) {
                 printf("Couldn't init the logger...\n");
                 return false;
         }
 
-        result = argument_parser_init(&context->AP, argc, argv);
-        if(result == false) {
+        if(argument_parser_init(&context->AP, argc, argv) == false) {
                 system_fatal(context, "parameters", "Couldn't init the argument parser...");
                 return false;
         }
