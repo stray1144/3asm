@@ -52,7 +52,6 @@ bool context_assembler_init(context_t *context, char *source_path) {
         system_debug(context, "file", "%s", context->file_data);
         // TODO: multiline logger format
 
-        bool result;
         if(lexer_init(&context->lexer, context->file_data) == false) {
                 system_fatal(context, "lexer", "Couldn't init the lexer...");
                 return false;
@@ -60,6 +59,11 @@ bool context_assembler_init(context_t *context, char *source_path) {
 
         if(buffer_init(&context->tokens, sizeof(lexer_token_t)) == false) {
                 system_fatal(context, "lexer", "Couldn't init the token buffer...");
+                return false;
+        }
+
+        if(semantizer_init(&context->semantizer) == false) {
+                system_fatal(context, "semantizer", "Couldn't init the semantizer...");
                 return false;
         }
 
