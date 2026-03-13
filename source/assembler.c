@@ -16,7 +16,7 @@ size_t file_size_get(char *path) {
 
 char *file_read(char *path) {
         size_t size = file_size_get(path);
-        char *buffer = calloc(size, 1);
+        char *buffer = calloc(size + 1, 1);
 
         FILE *handle = fopen(path, "r");
         if(handle == nullptr) return nullptr;
