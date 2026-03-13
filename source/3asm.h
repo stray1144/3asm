@@ -54,6 +54,27 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_MINUS
 };
 
+static char *semantic_names[] = {
+        "SEMANTIC_UNKNOWN",
+        "SEMANTIC_IDENTIFIER",
+        "SEMANTIC_NUMBER",
+        "SEMANTIC_COMMENT",
+        "SEMANTIC_NEWLINE",
+
+        "SEMANTIC_AT",
+        "SEMANTIC_DOLLAR",
+        "SEMANTIC_PERCENT",
+        "SEMANTIC_COMMA",
+        "SEMANTIC_DOT",
+
+        "SEMANTIC_LPAREN",
+        "SEMANTIC_RPAREN",
+        "SEMANTIC_LESSER",
+        "SEMANTIC_GREATER",
+
+        "SEMANTIC_PLUS",
+        "SEMANTIC_MINUS"
+};
 
 #define FORGE_CALLBACK_COUNT 4
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
