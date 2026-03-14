@@ -1,5 +1,6 @@
 #include "3asm.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -48,6 +49,32 @@ bool forge_newline_handle(semantizer_unit_t *unit, lexer_token_t *token) {
         return true;
 }
 
+// clever shit. i'm lazy
+#define PUNCTUATION_HANDLER_NAME(name) forge_##name##_handle
+#define PUNCTUATION_HANDLER(name) PUNCTUATION_HANDLER_NAME(name) (semantizer_unit_t *unit, lexer_token_t *token)
+#define DEFINE_PUNCTUATION_HANDLER(name, ascii, semantic_kind) \
+bool PUNCTUATION_HANDLER(name) { \
+        if(token->kind != LEXER_TOKEN_PUNCTUATION || token->character != ascii) return false; \
+        semantizer_unit_init(unit, semantic_kind, nullptr, SEMANTIZER_DATA_FREE_NONE); \
+        semantizer_token_trace(unit, token); \
+        return true; \
+}
+
+DEFINE_PUNCTUATION_HANDLER(at, '@', SEMANTIC_AT)
+DEFINE_PUNCTUATION_HANDLER(dollar, '$', SEMANTIC_DOLLAR)
+DEFINE_PUNCTUATION_HANDLER(percent, '%', SEMANTIC_PERCENT)
+DEFINE_PUNCTUATION_HANDLER(comma, ',', SEMANTIC_COMMA)
+DEFINE_PUNCTUATION_HANDLER(dot, '.', SEMANTIC_DOT)
+DEFINE_PUNCTUATION_HANDLER(colon, ':', SEMANTIC_COLON)
+
+DEFINE_PUNCTUATION_HANDLER(lparen, '(', SEMANTIC_LPAREN)
+DEFINE_PUNCTUATION_HANDLER(rparen, ')', SEMANTIC_RPAREN)
+DEFINE_PUNCTUATION_HANDLER(lesser, '<', SEMANTIC_LESSER)
+DEFINE_PUNCTUATION_HANDLER(greater, '>', SEMANTIC_GREATER)
+
+DEFINE_PUNCTUATION_HANDLER(plus, '+', SEMANTIC_PLUS)
+DEFINE_PUNCTUATION_HANDLER(minus, '-', SEMANTIC_MINUS)
+
 semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT] = {
         forge_identifier_handle,
         forge_number_handle,
@@ -55,4 +82,18 @@ semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT] = {
         forge_string_handle,
         forge_newline_handle,
 
+        PUNCTUATION_HANDLER_NAME(at),
+        PUNCTUATION_HANDLER_NAME(dollar),
+        PUNCTUATION_HANDLER_NAME(percent),
+        PUNCTUATION_HANDLER_NAME(comma),
+        PUNCTUATION_HANDLER_NAME(dot),
+        PUNCTUATION_HANDLER_NAME(colon),
+
+        PUNCTUATION_HANDLER_NAME(lparen),
+        PUNCTUATION_HANDLER_NAME(rparen),
+        PUNCTUATION_HANDLER_NAME(lesser),
+        PUNCTUATION_HANDLER_NAME(greater),
+
+        PUNCTUATION_HANDLER_NAME(plus),
+        PUNCTUATION_HANDLER_NAME(minus),
 };

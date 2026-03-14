@@ -80,7 +80,7 @@ static char *semantic_names[] = {
         "SEMANTIC_MINUS"
 };
 
-#define FORGE_CALLBACK_COUNT 4
+#define FORGE_CALLBACK_COUNT 17
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
 typedef struct translation_unit_s {
