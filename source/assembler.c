@@ -155,6 +155,8 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
                 lexer_position_resolve(&context->lexer, at->position, &line, &column);
                 // TODO: add token kind reporting
                 system_error(context, "semantizer", "%s:%d:%d Unhandled _ token", source_path, line, column);
+                context_assembler_clear(context);
+                return false;
         } // TODO: this block is too complex. reduce
 
         context_assembler_clear(context);
