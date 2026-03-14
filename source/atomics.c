@@ -30,6 +30,15 @@ bool forge_comment_handle(semantizer_unit_t *unit, lexer_token_t *token) {
         return true;
 }
 
+bool forge_string_handle(semantizer_unit_t *unit, lexer_token_t *token) {
+        if(token->kind != LEXER_TOKEN_STRING_LITERAL) return false;
+
+        semantizer_unit_init(unit, SEMANTIC_STRING, strndup(token->string.base, token->string.length), free);
+        semantizer_token_trace(unit, token);
+
+        return true;
+}
+
 bool forge_newline_handle(semantizer_unit_t *unit, lexer_token_t *token) {
         if(token->kind != LEXER_TOKEN_NEWLINE) return false;
 
@@ -43,5 +52,7 @@ semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT] = {
         forge_identifier_handle,
         forge_number_handle,
         forge_comment_handle,
-        forge_newline_handle
+        forge_string_handle,
+        forge_newline_handle,
+
 };
