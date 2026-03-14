@@ -57,27 +57,27 @@ enum semantizer_unit_kind_e : uint32_t {
 };
 
 static char *semantic_names[] = {
-        "SEMANTIC_UNKNOWN",
-        "SEMANTIC_IDENTIFIER",
-        "SEMANTIC_NUMBER",
-        "SEMANTIC_COMMENT",
-        "SEMANTIC_STRING",
-        "SEMANTIC_NEWLINE",
+        "semantic_unknown",
+        "semantic_identifier",
+        "semantic_number",
+        "semantic_comment",
+        "semantic_string",
+        "semantic_newline",
 
-        "SEMANTIC_AT",
-        "SEMANTIC_DOLLAR",
-        "SEMANTIC_PERCENT",
-        "SEMANTIC_COMMA",
-        "SEMANTIC_DOT",
-        "SEMANTIC_COLON",
+        "semantic_at",
+        "semantic_dollar",
+        "semantic_percent",
+        "semantic_comma",
+        "semantic_dot",
+        "semantic_colon",
 
-        "SEMANTIC_LPAREN",
-        "SEMANTIC_RPAREN",
-        "SEMANTIC_LESSER",
-        "SEMANTIC_GREATER",
+        "semantic_lparen",
+        "semantic_rparen",
+        "semantic_lesser",
+        "semantic_greater",
 
-        "SEMANTIC_PLUS",
-        "SEMANTIC_MINUS"
+        "semantic_plus",
+        "semantic_minus"
 };
 
 #define FORGE_CALLBACK_COUNT 17
