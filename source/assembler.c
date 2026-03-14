@@ -34,8 +34,9 @@ void context_assembler_clear(context_t *context) {
         context->file_data = nullptr;
 
         lexer_clear(&context->lexer);
-
         buffer_clear(&context->tokens);
+
+        semantizer_clear(&context->semantizer);
 }
 
 bool context_assembler_init(context_t *context, char *source_path) {
