@@ -149,10 +149,13 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
         semantizer_forge_setup(&context->semantizer, forge_callbacks, FORGE_CALLBACK_COUNT);
         semantizer_forge_result_t forge_result = semantizer_forge_atomize(&context->semantizer, context->tokens.data, context->tokens.used);
         if(forge_result.status != FORGE_SUCCESS) {
-                // lexer_token_t *at = buffer_get(&context->tokens, forge_result.at);
-                // TODO: change to "<file> <line>:<column> Unhandled <type> token", these are merely placeholders
-                system_error(context, "semantizer", "%s:_:_ Unhandled _ token", source_path);
-        }
+                lexer_token_t *at = buffer_get(&context->tokens, forge_result.at);
+                lexer_position_t line;
+                lexer_position_t column;
+                lexer_position_resolve(&context->lexer, at->position, &line, &column);
+                // TODO: add token kind reporting
+                system_error(context, "semantizer", "%s:%d:%d Unhandled _ token", source_path, line, column);
+        } // TODO: this block is too complex. reduce
 
         context_assembler_clear(context);
 
