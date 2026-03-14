@@ -37,6 +37,7 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_IDENTIFIER,
         SEMANTIC_NUMBER,
         SEMANTIC_COMMENT,
+        SEMANTIC_STRING,
         SEMANTIC_NEWLINE,
 
         SEMANTIC_AT,
@@ -44,6 +45,7 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_PERCENT,
         SEMANTIC_COMMA,
         SEMANTIC_DOT,
+        SEMANTIC_COLON,
 
         SEMANTIC_LPAREN,
         SEMANTIC_RPAREN,
@@ -59,6 +61,7 @@ static char *semantic_names[] = {
         "SEMANTIC_IDENTIFIER",
         "SEMANTIC_NUMBER",
         "SEMANTIC_COMMENT",
+        "SEMANTIC_STRING",
         "SEMANTIC_NEWLINE",
 
         "SEMANTIC_AT",
@@ -66,6 +69,7 @@ static char *semantic_names[] = {
         "SEMANTIC_PERCENT",
         "SEMANTIC_COMMA",
         "SEMANTIC_DOT",
+        "SEMANTIC_COLON",
 
         "SEMANTIC_LPAREN",
         "SEMANTIC_RPAREN",
