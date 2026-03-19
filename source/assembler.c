@@ -158,6 +158,11 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
                 return false;
         } // TODO: this block is too complex. reduce
 
+        system_debug(context, "semantizer", "Starting semantizing...");
+
+        semantizer_pattern_setup(&context->semantizer, patterns, PATTERN_COUNT, LEVEL_COUNT);
+        semantize(&context->semantizer);
+
         context_assembler_clear(context);
 
         return true;
