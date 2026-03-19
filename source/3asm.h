@@ -65,7 +65,9 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_SECTION_DIRECTIVE,
         SEMANTIC_STORE_DIRECTIVE,
         SEMANTIC_STRING_DIRECTIVE,
-        SEMANTIC_BLANK_DIRECTIVE
+        SEMANTIC_BLANK_DIRECTIVE,
+
+        SEMANTIC_LABEL_DEFINITION
 };
 
 static char *semantic_names[] = {
@@ -101,14 +103,16 @@ static char *semantic_names[] = {
         "semantic_section_directive",
         "semantic_store_directive",
         "semantic_string_directive",
-        "semantic_blank_directive"
+        "semantic_blank_directive",
+
+        "semantic_label_definition"
 };
 
 #define FORGE_CALLBACK_COUNT 17
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
-#define LEVEL_COUNT 2
-#define PATTERN_COUNT 4
+#define LEVEL_COUNT 3
+#define PATTERN_COUNT 5
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 

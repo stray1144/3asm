@@ -77,6 +77,21 @@ size_t blank_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit,
         return 3;
 }
 
+bool label_definition_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_IDENTIFIER) &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_COLON);
+}
+
+size_t label_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        semantizer_unit_init(unit, SEMANTIC_LABEL_DEFINITION, nullptr, SEMANTIZER_DATA_FREE_NONE);
+        semantizer_stream_steal(semantizer, start, &unit->data, &unit->data_free);
+
+        return 2;
+}
+
+
+
+
 
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
@@ -90,5 +105,7 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(section_directive, 1),
         // store_directive
         // string_directive
-        PATTERN(blank_directive, 1)
+        PATTERN(blank_directive, 1),
+
+        PATTERN(label_definition, 2)
 }; 
