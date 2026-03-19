@@ -1,6 +1,7 @@
 #include "3asm.h"
 #include <stdio.h>
 #include <string.h>
+#include <strings.h>
 
 bool directive_mnemonic_match(semantizer_t *semantizer, size_t start) {
         bool match = semantizer_stream_match(semantizer, start, SEMANTIC_AT) &&
@@ -52,6 +53,31 @@ size_t section_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *uni
         return 3;
 }
 
+
+
+
+bool blank_directive_match(semantizer_t *semantizer, size_t start) {
+        if(semantizer_stream_match(semantizer, start, SEMANTIC_DIRECTIVE_MNEMONIC) == false) return false;
+
+        char *string = nullptr;
+        semantizer_stream_peek(semantizer, start, (void *)&string, nullptr);
+
+        bool is_end_valid = (semantizer_stream_match(semantizer, start + 1, SEMANTIC_SIZE_DEFINITION) && 
+                             semantizer_stream_match(semantizer, start + 2, SEMANTIC_NEWLINE)) ||
+                             semantizer_stream_match(semantizer, start + 1, SEMANTIC_NEWLINE);
+
+        return  strcasecmp(string, "blank") == 0 &&
+                is_end_valid;
+}
+
+size_t blank_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        semantizer_unit_init(unit, SEMANTIC_BLANK_DIRECTIVE, nullptr, SEMANTIZER_DATA_FREE_NONE);
+        semantizer_stream_steal(semantizer, start + 1, &unit->data, nullptr);
+
+        return 3;
+}
+
+
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
@@ -62,4 +88,7 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(size_definition, 0),
 
         PATTERN(section_directive, 1),
+        // store_directive
+        // string_directive
+        PATTERN(blank_directive, 1)
 }; 
