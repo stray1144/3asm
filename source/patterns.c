@@ -1,5 +1,6 @@
 #include "3asm.h"
 #include <stdio.h>
+#include <string.h>
 
 bool directive_mnemonic_match(semantizer_t *semantizer, size_t start) {
         bool match = semantizer_stream_match(semantizer, start, SEMANTIC_AT) &&
@@ -33,7 +34,23 @@ size_t size_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit,
         return 3;
 }
 
+bool section_directive_match(semantizer_t *semantizer, size_t start) {
+        if(semantizer_stream_match(semantizer, start, SEMANTIC_DIRECTIVE_MNEMONIC) == false) return false;
 
+        char *string = nullptr;
+        semantizer_stream_peek(semantizer, start, (void *)&string, nullptr);
+
+        return  strcasecmp(string, "section") == 0 &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_IDENTIFIER) &&
+                semantizer_stream_match(semantizer, start + 2, SEMANTIC_NEWLINE);
+}
+
+size_t section_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        semantizer_unit_init(unit, SEMANTIC_SECTION_DIRECTIVE, nullptr, SEMANTIZER_DATA_FREE_NONE);
+        semantizer_stream_steal(semantizer, start + 1, &unit->data, &unit->data_free);
+
+        return 3;
+}
 
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
@@ -43,4 +60,6 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         // PATTERN(instruction_mnemonic, 0),
 
         PATTERN(size_definition, 0),
+
+        PATTERN(section_directive, 1),
 }; 

@@ -107,8 +107,8 @@ static char *semantic_names[] = {
 #define FORGE_CALLBACK_COUNT 17
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
-#define LEVEL_COUNT 1
-#define PATTERN_COUNT 2
+#define LEVEL_COUNT 2
+#define PATTERN_COUNT 3
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 
