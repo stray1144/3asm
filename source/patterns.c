@@ -20,9 +20,27 @@ size_t directive_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *un
         return 2;
 }
 
+bool size_definition_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_LESSER) &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_NUMBER) &&
+                semantizer_stream_match(semantizer, start + 2, SEMANTIC_GREATER);
+} 
+
+size_t size_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        semantizer_unit_init(unit, SEMANTIC_SIZE_DEFINITION, nullptr, SEMANTIZER_DATA_FREE_NONE);
+        semantizer_stream_steal(semantizer, start + 1, &unit->data, nullptr);
+
+        return 3;
+}
+
+
 
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(directive_mnemonic, 0),
+        // PATTERN(register_mnemonic, 0),
+        // PATTERN(instruction_mnemonic, 0),
+
+        PATTERN(size_definition, 0),
 }; 
