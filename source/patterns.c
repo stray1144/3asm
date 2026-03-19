@@ -18,6 +18,7 @@ bool directive_mnemonic_match(semantizer_t *semantizer, size_t start) {
 size_t directive_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
         semantizer_unit_init(unit, SEMANTIC_DIRECTIVE_MNEMONIC, nullptr, nullptr);
         semantizer_stream_steal(semantizer, start + 1, &unit->data, &unit->data_free);
+        semantizer_stream_trace(semantizer, unit, start);
 
         return 2;
 }
@@ -31,6 +32,7 @@ bool size_definition_match(semantizer_t *semantizer, size_t start) {
 size_t size_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
         semantizer_unit_init(unit, SEMANTIC_SIZE_DEFINITION, nullptr, SEMANTIZER_DATA_FREE_NONE);
         semantizer_stream_steal(semantizer, start + 1, &unit->data, nullptr);
+        semantizer_stream_trace(semantizer, unit, start);
 
         return 3;
 }
@@ -49,6 +51,7 @@ bool section_directive_match(semantizer_t *semantizer, size_t start) {
 size_t section_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
         semantizer_unit_init(unit, SEMANTIC_SECTION_DIRECTIVE, nullptr, SEMANTIZER_DATA_FREE_NONE);
         semantizer_stream_steal(semantizer, start + 1, &unit->data, &unit->data_free);
+        semantizer_stream_trace(semantizer, unit, start);
 
         return 3;
 }
@@ -73,6 +76,7 @@ bool blank_directive_match(semantizer_t *semantizer, size_t start) {
 size_t blank_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
         semantizer_unit_init(unit, SEMANTIC_BLANK_DIRECTIVE, nullptr, SEMANTIZER_DATA_FREE_NONE);
         semantizer_stream_steal(semantizer, start + 1, &unit->data, nullptr);
+        semantizer_stream_trace(semantizer, unit, start);
 
         return 3;
 }
@@ -85,6 +89,7 @@ bool label_definition_match(semantizer_t *semantizer, size_t start) {
 size_t label_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
         semantizer_unit_init(unit, SEMANTIC_LABEL_DEFINITION, nullptr, SEMANTIZER_DATA_FREE_NONE);
         semantizer_stream_steal(semantizer, start, &unit->data, &unit->data_free);
+        semantizer_stream_trace(semantizer, unit, start);
 
         return 2;
 }
