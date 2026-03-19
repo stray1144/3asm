@@ -53,7 +53,19 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_GREATER,
 
         SEMANTIC_PLUS,
-        SEMANTIC_MINUS
+        SEMANTIC_MINUS,
+
+        // compounds!
+
+        SEMANTIC_DIRECTIVE_MNEMONIC,
+        SEMANTIC_REGISTER_MNEMONIC,
+        SEMANTIC_INSTRUCTION_MNEMONIC,
+        SEMANTIC_SIZE_DEFINITION,
+
+        SEMANTIC_SECTION_DIRECTIVE,
+        SEMANTIC_STORE_DIRECTIVE,
+        SEMANTIC_STRING_DIRECTIVE,
+        SEMANTIC_BLANK_DIRECTIVE
 };
 
 static char *semantic_names[] = {
@@ -77,11 +89,30 @@ static char *semantic_names[] = {
         "semantic_greater",
 
         "semantic_plus",
-        "semantic_minus"
+        "semantic_minus",
+
+        // compounds!
+
+        "semantic_directive_mnemonic",
+        "semantic_register_mnemonic",
+        "semantic_instruction_mnemonic",
+        "semantic_size_definition",
+
+        "semantic_section_directive",
+        "semantic_store_directive",
+        "semantic_string_directive",
+        "semantic_blank_directive"
 };
 
 #define FORGE_CALLBACK_COUNT 17
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
+
+#define LEVEL_COUNT 1
+#define PATTERN_COUNT 2
+extern semantizer_pattern_t patterns[PATTERN_COUNT];
+
+
+bool directive_mnemonic_exists(char *mnemonic);
 
 typedef struct translation_unit_s {
         char *name;
