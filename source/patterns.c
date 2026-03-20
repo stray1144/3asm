@@ -59,6 +59,26 @@ size_t section_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *uni
 
 
 
+
+bool string_directive_match(semantizer_t *semantizer, size_t start) {
+        if(semantizer_stream_match(semantizer, start, SEMANTIC_DIRECTIVE_MNEMONIC) == false) return false;
+
+        char *string = nullptr;
+        semantizer_stream_peek(semantizer, start, (void *)&string, nullptr);
+
+        return  strcasecmp(string, "string") == 0 &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_STRING) &&
+                semantizer_stream_match(semantizer, start + 2, SEMANTIC_NEWLINE);
+}
+
+size_t string_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        semantizer_unit_init(unit, SEMANTIC_STRING_DIRECTIVE, nullptr, SEMANTIZER_DATA_FREE_NONE);
+        semantizer_stream_steal(semantizer, start + 1, &unit->data, &unit->data_free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 3;
+}
+
 bool blank_directive_match(semantizer_t *semantizer, size_t start) {
         if(semantizer_stream_match(semantizer, start, SEMANTIC_DIRECTIVE_MNEMONIC) == false) return false;
 
@@ -109,7 +129,7 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
 
         PATTERN(section_directive, 1),
         // store_directive
-        // string_directive
+        PATTERN(string_directive, 1),
         PATTERN(blank_directive, 1),
 
         PATTERN(label_definition, 2)
