@@ -308,6 +308,31 @@ size_t operand_list_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, si
         return (count * 2) - 1;
 }
 
+void instruction_representation_destroy(instruction_representation_t *representation) {
+        if(representation == nullptr) return;
+
+        instruction_mnemonic_destroy(representation->mnemonic);
+        buffer_destroy(representation->operand_list);
+        free(representation);
+}
+
+bool instruction_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_INSTRUCTION_MNEMONIC) &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_OPERAND_LIST);
+}
+
+size_t instruction_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        instruction_representation_t *representation = calloc(1, sizeof(instruction_representation_t));
+
+        semantizer_stream_steal(semantizer, start, (void *)&representation->mnemonic, nullptr);
+        semantizer_stream_steal(semantizer, start + 1, (void *)&representation->operand_list, nullptr);
+
+        semantizer_unit_init(unit, SEMANTIC_INSTRUCTION, representation, (semantizer_data_free_t *)instruction_representation_destroy);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 2;
+}
+
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
@@ -330,5 +355,5 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
 
         PATTERN(operand_list, 4),
 
-        // PATTERN(instruction, 5),
+        PATTERN(instruction, 5),
 }; 

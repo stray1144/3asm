@@ -74,7 +74,9 @@ enum semantizer_unit_kind_e : uint32_t {
 
         SEMANTIC_LABEL_DEFINITION,
 
-        SEMANTIC_OPERAND_LIST
+        SEMANTIC_OPERAND_LIST,
+
+        SEMANTIC_INSTRUCTION
 };
 
 static char *semantic_names[] = {
@@ -114,14 +116,16 @@ static char *semantic_names[] = {
 
         "semantic_label_definition",
 
-        "semantic_operand_list"
+        "semantic_operand_list",
+
+        "semantic_instruction"
 };
 
 #define FORGE_CALLBACK_COUNT 17
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
-#define LEVEL_COUNT 5
-#define PATTERN_COUNT 13
+#define LEVEL_COUNT 6
+#define PATTERN_COUNT 14
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 typedef struct operand_representation_s {
@@ -135,6 +139,11 @@ typedef struct instruction_mnemonic_s {
         char *root;
         char *flags;
 } instruction_mnemonic_t;
+
+typedef struct instruction_representation_s {
+        instruction_mnemonic_t *mnemonic;
+        buffer_t *operand_list;
+} instruction_representation_t;
 
 bool directive_mnemonic_exists(char *mnemonic);
 const instruction_descriptor_t *instruction_find(char *mnemonic);
