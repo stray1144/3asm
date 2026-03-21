@@ -24,7 +24,7 @@ typedef struct flag_descriptor_s {
 } flag_descriptor_t;
 
 typedef struct instruction_descriptor_s {
-        const char mnemonic[9];
+        const char mnemonic[10];
         uint8_t operation_code;
 
         uint8_t flag_count;
@@ -93,7 +93,7 @@ static const instruction_descriptor_t instruction_lut[INSTRUCTION_COUNT] = {
 };
 
 typedef struct register_descriptor_s {
-        char mnemonic[3];
+        char mnemonic[4];
         uint8_t encoding;
         operand_kind_t kind;
 } register_descriptor_t;
