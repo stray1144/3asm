@@ -35,9 +35,20 @@ bool instruction_mnemonic_match(semantizer_t *semantizer, size_t start) {
         return instruction_find(string) != nullptr;
 }
 
+void instruction_mnemonic_destroy(instruction_mnemonic_t *mnemonic) {
+        if(mnemonic == nullptr) return;
+
+        if(mnemonic->root) free(mnemonic->root);
+        if(mnemonic->flags) free(mnemonic->flags);
+        free(mnemonic);
+}
+
 size_t instruction_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
-        semantizer_unit_init(unit, SEMANTIC_INSTRUCTION_MNEMONIC, nullptr, nullptr);
-        semantizer_stream_steal(semantizer, start, &unit->data, &unit->data_free);
+        instruction_mnemonic_t *representation = calloc(1, sizeof(instruction_mnemonic_t));
+
+        semantizer_stream_steal(semantizer, start, (void *)&representation->root, nullptr);
+
+        semantizer_unit_init(unit, SEMANTIC_INSTRUCTION_MNEMONIC, representation, (semantizer_data_free_t *)instruction_mnemonic_destroy);
         semantizer_stream_trace(semantizer, unit, start);
 
         return 1;

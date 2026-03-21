@@ -127,6 +127,11 @@ typedef struct operand_representation_s {
         int64_t payload;
 } operand_representation_t; 
 
+typedef struct instruction_mnemonic_s {
+        char *root;
+        char *flags;
+} instruction_mnemonic_t;
+
 bool directive_mnemonic_exists(char *mnemonic);
 const instruction_descriptor_t *instruction_find(char *mnemonic);
 ssize_t instruction_flag_find(char symbol, instruction_descriptor_t *descriptor);
