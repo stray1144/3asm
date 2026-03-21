@@ -201,6 +201,38 @@ size_t apply_size_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size
         return 2;
 }
 
+bool apply_offset_match(semantizer_t *semantizer, size_t start) {
+        bool is_lhs_valid = semantizer_stream_match(semantizer, start, SEMANTIC_LPAREN)&&
+                            semantizer_stream_match(semantizer, start + 1, SEMANTIC_OPERAND);
+        bool is_operator_valid = semantizer_stream_match(semantizer, start + 2, SEMANTIC_PLUS)||
+                                 semantizer_stream_match(semantizer, start + 2, SEMANTIC_MINUS);
+        bool is_rhs_valid = semantizer_stream_match(semantizer, start + 3, SEMANTIC_OPERAND)&&
+                            semantizer_stream_match(semantizer, start + 4, SEMANTIC_RPAREN);
+
+        return is_lhs_valid && is_operator_valid && is_rhs_valid;
+}
+
+size_t apply_offset_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        operand_representation_t *lhs = nullptr;
+        operand_representation_t *rhs = nullptr;
+
+        semantizer_stream_peek(semantizer, start + 1, (void *)&lhs, nullptr);
+        semantizer_stream_peek(semantizer, start + 3, (void *)&rhs, nullptr);
+
+        operand_representation_t *product = calloc(1, sizeof(operand_representation_t));
+        product->kind = lhs->kind | rhs->kind | OPERAND_OFFSET_FLAG;
+        product->register_encoding = lhs->register_encoding; // TODO: reject the weird case of (%reg +/- %reg), which implies a cpu "magic register arithmetic operand"
+        product->operand_size = rhs->operand_size; // payload size
+        product->payload = (semantizer_stream_match(semantizer, start + 2, SEMANTIC_PLUS)) ?
+                           lhs->payload + rhs->payload : lhs->payload - rhs->payload;
+
+        semantizer_unit_init(unit, SEMANTIC_OPERAND, product, free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 5;
+}
+
+
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
@@ -218,5 +250,5 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(label_definition, 2),
 
         PATTERN(apply_size, 3),
-        // PATTERN(apply_offset, 4)
+        PATTERN(apply_offset, 3)
 }; 

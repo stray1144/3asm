@@ -117,7 +117,7 @@ static char *semantic_names[] = {
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
 #define LEVEL_COUNT 4
-#define PATTERN_COUNT 10
+#define PATTERN_COUNT 11
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 typedef struct operand_representation_s {
