@@ -1,7 +1,7 @@
 #include "3asm.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <strings.h>
 
 bool directive_mnemonic_match(semantizer_t *semantizer, size_t start) {
         bool match = semantizer_stream_match(semantizer, start, SEMANTIC_AT) &&
@@ -23,7 +23,6 @@ size_t directive_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *un
         return 2;
 }
 
-
 bool instruction_mnemonic_match(semantizer_t *semantizer, size_t start) {
         bool match = semantizer_stream_match(semantizer, start, SEMANTIC_IDENTIFIER);
 
@@ -43,6 +42,33 @@ size_t instruction_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *
         return 1;
 }
 
+bool register_operand_match(semantizer_t *semantizer, size_t start) {
+        bool match = semantizer_stream_match(semantizer, start, SEMANTIC_PERCENT) &&
+                     semantizer_stream_match(semantizer, start + 1, SEMANTIC_IDENTIFIER);
+
+        if(!match) return false;
+
+        char *string = nullptr;
+        semantizer_stream_peek(semantizer, start + 1, (void *)&string, nullptr);
+
+        return register_find(string) != nullptr;
+}
+
+size_t register_operand_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        char *mnemonic = nullptr;
+        semantizer_stream_peek(semantizer, start + 1, (void *)&mnemonic, nullptr);
+
+        register_descriptor_t *descriptor = register_find(mnemonic);
+
+        operand_representation_t *representation = calloc(1, sizeof(operand_representation_t));
+        representation->kind = descriptor->kind;
+        representation->register_encoding = descriptor->encoding;
+
+        semantizer_unit_init(unit, SEMANTIC_OPERAND, representation, free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 2;
+}
 
 bool size_definition_match(semantizer_t *semantizer, size_t start) {
         return  semantizer_stream_match(semantizer, start, SEMANTIC_LESSER) &&
@@ -143,10 +169,10 @@ size_t label_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit
 
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(directive_mnemonic, 0),
-        // PATTERN(register_mnemonic, 0),
         PATTERN(instruction_mnemonic, 0),
-
         PATTERN(size_definition, 0),
+        PATTERN(register_operand, 0),
+        // PATTERN(immediate_operand, 0),
 
         PATTERN(section_directive, 1),
         // store_directive
