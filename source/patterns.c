@@ -296,6 +296,7 @@ size_t operand_list_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, si
 
                 semantizer_stream_steal(semantizer, cursor, (void *)&representation, nullptr);
                 buffer_append(list, representation, 1);
+                free(representation);
 
                 count++;
 
