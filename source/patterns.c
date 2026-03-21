@@ -1,4 +1,5 @@
 #include "3asm.h"
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -180,9 +181,25 @@ size_t label_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit
         return 2;
 }
 
+bool apply_size_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_OPERAND) &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_SIZE_DEFINITION);
+}
 
+size_t apply_size_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        operand_representation_t *representation = nullptr;
+        uint64_t *size = nullptr;
 
+        semantizer_stream_steal(semantizer, start, (void *)&representation, nullptr);
+        semantizer_stream_steal(semantizer, start + 1, (void *)&size, nullptr);
 
+        representation->operand_size = *size;
+
+        semantizer_unit_init(unit, SEMANTIC_OPERAND, representation, free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 2;
+}
 
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
@@ -198,5 +215,8 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(string_directive, 1),
         PATTERN(blank_directive, 1),
 
-        PATTERN(label_definition, 2)
+        PATTERN(label_definition, 2),
+
+        PATTERN(apply_size, 3),
+        // PATTERN(apply_offset, 4)
 }; 
