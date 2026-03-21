@@ -243,6 +243,26 @@ size_t apply_offset_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, si
         return 5;
 }
 
+bool apply_flags_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_INSTRUCTION_MNEMONIC) &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_DOT) &&
+                semantizer_stream_match(semantizer, start + 2, SEMANTIC_IDENTIFIER);
+}
+
+size_t apply_flags_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        instruction_mnemonic_t *mnemonic = nullptr;
+        char *flags = nullptr;
+
+        semantizer_stream_steal(semantizer, start, (void *)&mnemonic, nullptr);
+        semantizer_stream_steal(semantizer, start + 2, (void *)&flags, nullptr);
+
+        mnemonic->flags = flags;
+
+        semantizer_unit_init(unit, SEMANTIC_INSTRUCTION_MNEMONIC, mnemonic, (semantizer_data_free_t *)instruction_mnemonic_destroy);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 3;
+}
 
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
@@ -261,5 +281,6 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(label_definition, 2),
 
         PATTERN(apply_size, 3),
-        PATTERN(apply_offset, 3)
+        PATTERN(apply_offset, 3),
+        PATTERN(apply_flags, 3)
 }; 
