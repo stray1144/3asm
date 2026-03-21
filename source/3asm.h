@@ -1,6 +1,7 @@
 // Copyright (C) 2026 Stray1144
 // SPDX-License-Identifier: GPL-3.0-or-later
 
+#include <stdint.h>
 #if !defined(__3Asm)
 #define __3Asm
 
@@ -62,8 +63,8 @@ enum semantizer_unit_kind_e : uint32_t {
         // compounds!
 
         SEMANTIC_DIRECTIVE_MNEMONIC,
-        SEMANTIC_REGISTER_MNEMONIC,
         SEMANTIC_INSTRUCTION_MNEMONIC,
+        SEMANTIC_OPERAND,
         SEMANTIC_SIZE_DEFINITION,
 
         SEMANTIC_SECTION_DIRECTIVE,
@@ -100,8 +101,8 @@ static char *semantic_names[] = {
         // compounds!
 
         "semantic_directive_mnemonic",
-        "semantic_register_mnemonic",
         "semantic_instruction_mnemonic",
+        "semantic_operand",
         "semantic_size_definition",
 
         "semantic_section_directive",
