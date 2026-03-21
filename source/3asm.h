@@ -7,6 +7,10 @@
 #include <cxtoolchain/libcxsh.h>
 #include <libvacant/libvacant.h>
 
+#include "arcx.h"
+
+#include <sys/types.h>
+
 typedef struct settings_s {
         char *output_file;
         char *entry_symbol;
@@ -116,7 +120,11 @@ extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 
+
 bool directive_mnemonic_exists(char *mnemonic);
+const instruction_descriptor_t *instruction_find(char *mnemonic);
+ssize_t instruction_flag_find(char symbol, instruction_descriptor_t *descriptor);
+register_descriptor_t *register_find(char *mnemonic);
 
 typedef struct translation_unit_s {
         char *name;
