@@ -23,6 +23,27 @@ size_t directive_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *un
         return 2;
 }
 
+
+bool instruction_mnemonic_match(semantizer_t *semantizer, size_t start) {
+        bool match = semantizer_stream_match(semantizer, start, SEMANTIC_IDENTIFIER);
+
+        if(!match) return false;
+
+        char *string = nullptr;
+        semantizer_stream_peek(semantizer, start, (void *)&string, nullptr);
+
+        return instruction_find(string) != nullptr;
+}
+
+size_t instruction_mnemonic_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        semantizer_unit_init(unit, SEMANTIC_INSTRUCTION_MNEMONIC, nullptr, nullptr);
+        semantizer_stream_steal(semantizer, start, &unit->data, &unit->data_free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 1;
+}
+
+
 bool size_definition_match(semantizer_t *semantizer, size_t start) {
         return  semantizer_stream_match(semantizer, start, SEMANTIC_LESSER) &&
                 semantizer_stream_match(semantizer, start + 1, SEMANTIC_NUMBER) &&
@@ -123,7 +144,7 @@ size_t label_definition_reduct(semantizer_t *semantizer, semantizer_unit_t *unit
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(directive_mnemonic, 0),
         // PATTERN(register_mnemonic, 0),
-        // PATTERN(instruction_mnemonic, 0),
+        PATTERN(instruction_mnemonic, 0),
 
         PATTERN(size_definition, 0),
 
