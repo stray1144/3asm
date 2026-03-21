@@ -72,7 +72,9 @@ enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_STRING_DIRECTIVE,
         SEMANTIC_BLANK_DIRECTIVE,
 
-        SEMANTIC_LABEL_DEFINITION
+        SEMANTIC_LABEL_DEFINITION,
+
+        SEMANTIC_OPERAND_LIST
 };
 
 static char *semantic_names[] = {
@@ -110,14 +112,16 @@ static char *semantic_names[] = {
         "semantic_string_directive",
         "semantic_blank_directive",
 
-        "semantic_label_definition"
+        "semantic_label_definition",
+
+        "semantic_operand_list"
 };
 
 #define FORGE_CALLBACK_COUNT 17
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
-#define LEVEL_COUNT 4
-#define PATTERN_COUNT 12
+#define LEVEL_COUNT 5
+#define PATTERN_COUNT 13
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 typedef struct operand_representation_s {

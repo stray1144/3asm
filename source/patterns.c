@@ -264,6 +264,50 @@ size_t apply_flags_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, siz
         return 3;
 }
 
+bool operand_list_separator_check(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_COMMA) ||
+                semantizer_stream_match(semantizer, start, SEMANTIC_NEWLINE);
+
+}
+
+void buffer_destroy(buffer_t *buffer) {
+        if(buffer == nullptr) return;
+
+        buffer_clear(buffer);
+        free(buffer);
+}
+
+bool operand_list_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_OPERAND) &&
+                operand_list_separator_check(semantizer, start + 1);
+}
+
+size_t operand_list_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        buffer_t *list = calloc(1, sizeof(buffer_t));
+        buffer_init(list, sizeof(operand_representation_t));
+
+        size_t count = 0;
+
+        while(true) {
+                size_t cursor = start + (count * 2);
+                operand_representation_t *representation = nullptr;
+
+                if(operand_list_match(semantizer, cursor) == false) break;
+
+                semantizer_stream_steal(semantizer, cursor, (void *)&representation, nullptr);
+                buffer_append(list, representation, 1);
+
+                count++;
+
+                if(semantizer_stream_match(semantizer, cursor + 1, SEMANTIC_NEWLINE)) break;
+        }
+
+        semantizer_unit_init(unit, SEMANTIC_OPERAND_LIST, list, (semantizer_data_free_t *)buffer_destroy);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return (count * 2) - 1;
+}
+
 #define PATTERN(name, level) {name##_match, name##_reduct, level}
 
 semantizer_pattern_t patterns[PATTERN_COUNT] = {
@@ -282,5 +326,9 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
 
         PATTERN(apply_size, 3),
         PATTERN(apply_offset, 3),
-        PATTERN(apply_flags, 3)
+        PATTERN(apply_flags, 3),
+
+        PATTERN(operand_list, 4),
+
+        // PATTERN(instruction, 5),
 }; 
