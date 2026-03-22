@@ -71,6 +71,19 @@ generator_result_t generator_blank_handle(translation_unit_t *output, semantizer
         return generator_result(GENERATOR_OK, i);
 }
 
+generator_result_t generator_label_define(translation_unit_t *output, semantizer_t *source, uint32_t i) {
+        symbol_t symbol = {nullptr, output->actual_section, 0};
+        semantizer_stream_steal(source, i, (void *)&symbol.name, nullptr);
+
+        if(output->actual_section == REO_LOCATION_CODE) symbol.location = output->code_section.used;
+        if(output->actual_section == REO_LOCATION_DATA) symbol.location = output->data_section.used;
+        if(output->actual_section == REO_LOCATION_BLOCK) symbol.location = output->block;
+
+        buffer_append(&output->symbols, &symbol, 1);
+
+        return generator_result(GENERATOR_OK, i);
+}
+
 generator_result_t generator_process(translation_unit_t *output, semantizer_t *source, uint32_t i) {
         generator_result_t result = generator_result(GENERATOR_OK, i);
 
@@ -85,6 +98,10 @@ generator_result_t generator_process(translation_unit_t *output, semantizer_t *s
 
                 case SEMANTIC_BLANK_DIRECTIVE:
                 result = generator_blank_handle(output, source, i);
+                break;
+
+                case SEMANTIC_LABEL_DEFINITION:
+                result = generator_label_define(output, source, i);
                 break;
 
                 case SEMANTIC_COMMENT:
