@@ -62,6 +62,15 @@ generator_result_t generator_string_handle(translation_unit_t *output, semantize
         return generator_result(GENERATOR_OK, i);
 }
 
+generator_result_t generator_blank_handle(translation_unit_t *output, semantizer_t *source, uint32_t i) {
+        uint64_t *size = nullptr;
+        semantizer_stream_peek(source, i, (void *)&size, nullptr);
+
+        generator_emit_blank(output, *size);
+
+        return generator_result(GENERATOR_OK, i);
+}
+
 generator_result_t generator_process(translation_unit_t *output, semantizer_t *source, uint32_t i) {
         generator_result_t result = generator_result(GENERATOR_OK, i);
 
@@ -72,6 +81,10 @@ generator_result_t generator_process(translation_unit_t *output, semantizer_t *s
 
                 case SEMANTIC_STRING_DIRECTIVE:
                 result = generator_string_handle(output, source, i);
+                break;
+
+                case SEMANTIC_BLANK_DIRECTIVE:
+                result = generator_blank_handle(output, source, i);
                 break;
 
                 case SEMANTIC_COMMENT:
