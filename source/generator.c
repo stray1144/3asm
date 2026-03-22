@@ -53,12 +53,25 @@ generator_result_t generator_section_handle(translation_unit_t *output, semantiz
         return generator_result(GENERATOR_OK, i);
 }
 
+generator_result_t generator_string_handle(translation_unit_t *output, semantizer_t *source, uint32_t i) {
+        char *string = nullptr;
+        semantizer_stream_peek(source, i, (void *)&string, nullptr);
+
+        if(generator_emit_data(output, string, strlen(string) + 1) == false) return generator_result(GENERATOR_BLOCK_WRITE, i);
+
+        return generator_result(GENERATOR_OK, i);
+}
+
 generator_result_t generator_process(translation_unit_t *output, semantizer_t *source, uint32_t i) {
         generator_result_t result = generator_result(GENERATOR_OK, i);
 
         switch(semantizer_stream_get(source, i)) {
                 case SEMANTIC_SECTION_DIRECTIVE:
                 result = generator_section_handle(output, source, i);
+                break;
+
+                case SEMANTIC_STRING_DIRECTIVE:
+                result = generator_string_handle(output, source, i);
                 break;
 
                 case SEMANTIC_COMMENT:
