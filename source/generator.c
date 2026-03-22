@@ -9,6 +9,38 @@ generator_result_t generator_result(generator_status_t status, uint32_t at) {
 }
 
 
+bool generator_emit_byte(translation_unit_t *output, uint8_t data, size_t size) {
+        if(output->actual_section == REO_LOCATION_BLOCK) return false;
+
+        buffer_t *section_buffer = nullptr;
+
+        if(output->actual_section == REO_LOCATION_CODE) section_buffer = &output->code_section;
+        if(output->actual_section == REO_LOCATION_DATA) section_buffer = &output->data_section;
+
+        for(size_t i = 0; i < size; i++) buffer_append(&output->data_section, &data, 1);
+
+        return true;
+}
+
+bool generator_emit_blank(translation_unit_t *output, size_t size) {
+        if(generator_emit_byte(output, 0x00, size) == false) output->block += size;
+
+        return true;
+}
+
+bool generator_emit_data(translation_unit_t *output, void *data, size_t size) {
+        if(output->actual_section == REO_LOCATION_BLOCK) return false;
+
+        buffer_t *section_buffer = nullptr;
+
+        if(output->actual_section == REO_LOCATION_CODE) section_buffer = &output->code_section;
+        if(output->actual_section == REO_LOCATION_DATA) section_buffer = &output->data_section;
+
+        buffer_append(&output->data_section, data, size);
+
+        return true;      
+}
+
 generator_result_t generator_process(translation_unit_t *output, semantizer_t *source, uint32_t i) {
         generator_result_t result = generator_result(GENERATOR_OK, i);
 
