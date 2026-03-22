@@ -157,12 +157,34 @@ typedef struct translation_unit_s {
         reo_size_t block;
         buffer_t symbols;      // buffer<symbol_t>
         buffer_t relocations;  // buffer<symbol_t>
+        uint32_t actual_section;
 } translation_unit_t;
 
 bool translation_unit_init(translation_unit_t *translation_unit, char *name);
 void translation_unit_clear(translation_unit_t *translation_unit);
 
 bool translation_unit_assemble(context_t *context, translation_unit_t *translation_unit, char *source_path);
+
+typedef enum generator_status_e {
+        GENERATOR_OK,
+        GENERATOR_UNEXPECTED,
+        GENERATOR_INVALID_SECTION,
+        GENERATOR_BLOCK_WRITE
+} generator_status_t;
+
+static const char *generator_error_messages[] = {
+        "OK.",
+        "Unexpected semantic unit.",
+        "Invalid section.",
+        "You can't write to the block section."
+};
+
+typedef struct generator_result_s {
+        generator_status_t status;
+        uint32_t at;
+} generator_result_t;
+
+generator_result_t generate(translation_unit_t *output, semantizer_t *source);
 
 #define SYSTEM_LOGGER(name) system_##name(context_t *context, char *prefix, char *format, ...)
 
@@ -172,6 +194,5 @@ void SYSTEM_LOGGER(warn); // system_warn()
 void SYSTEM_LOGGER(info); // system_info()
 void SYSTEM_LOGGER(verbose); // system_verbose()
 void SYSTEM_LOGGER(debug); // system_debug()
-
 
 #endif
