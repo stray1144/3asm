@@ -163,6 +163,17 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
         semantizer_pattern_setup(&context->semantizer, patterns, PATTERN_COUNT, LEVEL_COUNT);
         semantize(&context->semantizer);
 
+        generator_result_t generator_result = generate(translation_unit, &context->semantizer);
+        if(generator_result.status  != GENERATOR_OK) {
+                semantizer_unit_t *at = buffer_get(&context->semantizer.stream, generator_result.at);
+                lexer_position_t line;
+                lexer_position_t column;
+                lexer_position_resolve(&context->lexer, at->position, &line, &column);
+                system_error(context, "semantizer", "%s:%d:%d %s", source_path, line, column, generator_error_messages[generator_result.status]);
+                context_assembler_clear(context);
+                return false;
+        }
+
         context_assembler_clear(context);
 
         return true;
