@@ -1,3 +1,13 @@
+#include "3asm.h"
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <strings.h>
+
+generator_result_t generator_result(generator_status_t status, uint32_t at) {
+        return (generator_result_t) {status, at};
+}
+
 
 generator_result_t generator_process(translation_unit_t *output, semantizer_t *source, uint32_t i) {
         generator_result_t result = generator_result(GENERATOR_OK, i);
