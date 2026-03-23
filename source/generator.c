@@ -17,7 +17,7 @@ bool generator_emit_byte(translation_unit_t *output, uint8_t data, size_t size) 
         if(output->actual_section == REO_LOCATION_CODE) section_buffer = &output->code_section;
         if(output->actual_section == REO_LOCATION_DATA) section_buffer = &output->data_section;
 
-        for(size_t i = 0; i < size; i++) buffer_append(&output->data_section, &data, 1);
+        for(size_t i = 0; i < size; i++) buffer_append(section_buffer, &data, 1);
 
         return true;
 }
@@ -36,7 +36,7 @@ bool generator_emit_data(translation_unit_t *output, void *data, size_t size) {
         if(output->actual_section == REO_LOCATION_CODE) section_buffer = &output->code_section;
         if(output->actual_section == REO_LOCATION_DATA) section_buffer = &output->data_section;
 
-        buffer_append(&output->data_section, data, size);
+        buffer_append(section_buffer, data, size);
 
         return true;      
 }
