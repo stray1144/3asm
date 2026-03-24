@@ -74,7 +74,7 @@ size_t register_operand_reduct(semantizer_t *semantizer, semantizer_unit_t *unit
 
         operand_representation_t *representation = calloc(1, sizeof(operand_representation_t));
         representation->kind = descriptor->kind;
-        representation->register_encoding = descriptor->encoding;
+        representation->register_descriptor = descriptor;
 
         semantizer_unit_init(unit, SEMANTIC_OPERAND, representation, free);
         semantizer_stream_trace(semantizer, unit, start);
@@ -232,7 +232,8 @@ size_t apply_offset_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, si
 
         operand_representation_t *product = calloc(1, sizeof(operand_representation_t));
         product->kind = lhs->kind | rhs->kind | OPERAND_OFFSET_FLAG;
-        product->register_encoding = lhs->register_encoding; // TODO: reject the weird case of (%reg +/- %reg), which implies a cpu "magic register arithmetic operand"
+        if(lhs->kind & OPERAND_REGISTER) product->register_descriptor = lhs->register_descriptor;
+        if(lhs->kind & OPERAND_REFERENCE) product->symbol_name = lhs->symbol_name; 
         product->operand_size = rhs->operand_size; // payload size
         product->payload = (semantizer_stream_match(semantizer, start + 2, SEMANTIC_PLUS)) ?
                            lhs->payload + rhs->payload : lhs->payload - rhs->payload;

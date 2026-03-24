@@ -130,8 +130,11 @@ extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 typedef struct operand_representation_s {
         operand_kind_t kind;
-        uint8_t register_encoding;
         uint32_t operand_size;
+        union {
+                register_descriptor_t *register_descriptor;
+                char *symbol_name;
+        };
         int64_t payload;
 } operand_representation_t; 
 
