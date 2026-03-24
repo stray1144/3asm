@@ -173,4 +173,7 @@ static register_descriptor_t register_lut[REGISTER_COUNT] = {
 	{"vr" , 0x19, OPERAND_VECTOR},
 };
 
-
+typedef struct encoded_descriptor_s {
+	uint8_t register_id : 6;
+	uint8_t size : 2;
+} encoded_descriptor_t;
