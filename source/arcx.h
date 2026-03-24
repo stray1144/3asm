@@ -83,7 +83,7 @@ static const instruction_descriptor_t instruction_lut[INSTRUCTION_COUNT] = {
         {"control"  , 0xF6, 2, {{'p', 1 << 0}, {'i', 1 << 1}}, 1, {OPERAND_VALUE}},
         {"rfa"      , 0xF7, 0, {}, 0, {}},
         {"svas"     , 0xF8, 0, {}, 1, {OPERAND_WHATEVER}},
-        {"fca"      , 0xF9, 0, {}, 0, {}},
+        {"fca"      , 0xF9, 1, {{'g', 1 << 0}}, 0, {}},
         {"fce"      , 0xFA, 0, {}, 1, {OPERAND_WHATEVER}},
         {"sihan"    , 0xFB, 0, {}, 2, {OPERAND_VALUE, OPERAND_WHATEVER}},
         {"interrupt", 0xFC, 0, {}, 1, {OPERAND_VALUE}},
