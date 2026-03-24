@@ -108,7 +108,7 @@ bool reference_operand_match(semantizer_t *semantizer, size_t start) {
 
 size_t reference_operand_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
         char *name = nullptr;
-        semantizer_stream_peek(semantizer, start + 1, (void *)&name, nullptr);
+        semantizer_stream_steal(semantizer, start + 1, (void *)&name, nullptr);
 
         operand_representation_t *representation = calloc(1, sizeof(operand_representation_t));
         representation->kind = OPERAND_REFERENCE;

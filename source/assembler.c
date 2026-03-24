@@ -78,7 +78,17 @@ void translation_unit_clear(translation_unit_t *translation_unit) {
         buffer_clear(&translation_unit->code_section);
         buffer_clear(&translation_unit->data_section);
 
+
+        for(size_t i = 0; i < translation_unit->symbols.used; i++) {
+                symbol_t *symbol = buffer_get(&translation_unit->symbols, i);
+                free(symbol->name);
+        }
         buffer_clear(&translation_unit->symbols);
+       
+        for(size_t i = 0; i < translation_unit->relocations.used; i++) {
+                symbol_t *symbol = buffer_get(&translation_unit->relocations, i);
+                free(symbol->name);
+        }
         buffer_clear(&translation_unit->relocations);
 
         memset(translation_unit, 0, sizeof(translation_unit_t));
