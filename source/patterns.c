@@ -101,6 +101,26 @@ size_t immediate_operand_reduct(semantizer_t *semantizer, semantizer_unit_t *uni
         return 2;
 }
 
+bool reference_operand_match(semantizer_t *semantizer, size_t start) {
+        return  semantizer_stream_match(semantizer, start, SEMANTIC_DOLLAR) &&
+                semantizer_stream_match(semantizer, start + 1, SEMANTIC_IDENTIFIER);
+}
+
+size_t reference_operand_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        char *name = nullptr;
+        semantizer_stream_peek(semantizer, start + 1, (void *)&name, nullptr);
+
+        operand_representation_t *representation = calloc(1, sizeof(operand_representation_t));
+        representation->kind = OPERAND_REFERENCE;
+        representation->symbol_name = name;
+
+        semantizer_unit_init(unit, SEMANTIC_OPERAND, representation, free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return 2;
+}
+
+
 bool size_definition_match(semantizer_t *semantizer, size_t start) {
         return  semantizer_stream_match(semantizer, start, SEMANTIC_LESSER) &&
                 semantizer_stream_match(semantizer, start + 1, SEMANTIC_NUMBER) &&
@@ -343,6 +363,7 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(size_definition, 0),
         PATTERN(register_operand, 0),
         PATTERN(immediate_operand, 0),
+        PATTERN(reference_operand, 0),
 
         PATTERN(section_directive, 1),
         // store_directive
