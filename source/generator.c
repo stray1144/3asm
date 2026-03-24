@@ -71,13 +71,16 @@ generator_result_t generator_blank_handle(translation_unit_t *output, semantizer
         return generator_result(GENERATOR_OK, i);
 }
 
-generator_result_t generator_label_define(translation_unit_t *output, semantizer_t *source, uint32_t i) {
-        symbol_t symbol = {nullptr, output->actual_section, 0};
-        semantizer_stream_steal(source, i, (void *)&symbol.name, nullptr);
+reo_offset_t generator_section_offset(translation_unit_t *output) {
+        if(output->actual_section == REO_LOCATION_CODE) return output->code_section.used;
+        if(output->actual_section == REO_LOCATION_DATA) return output->data_section.used;
+        if(output->actual_section == REO_LOCATION_BLOCK) return output->block;
+        return 0;
+}
 
-        if(output->actual_section == REO_LOCATION_CODE) symbol.location = output->code_section.used;
-        if(output->actual_section == REO_LOCATION_DATA) symbol.location = output->data_section.used;
-        if(output->actual_section == REO_LOCATION_BLOCK) symbol.location = output->block;
+generator_result_t generator_label_define(translation_unit_t *output, semantizer_t *source, uint32_t i) {
+        symbol_t symbol = {nullptr, output->actual_section, generator_section_offset(output)};
+        semantizer_stream_steal(source, i, (void *)&symbol.name, nullptr);
 
         buffer_append(&output->symbols, &symbol, 1);
 
