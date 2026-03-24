@@ -184,7 +184,5 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
                 return false;
         }
 
-        context_assembler_clear(context);
-
         return true;
 }

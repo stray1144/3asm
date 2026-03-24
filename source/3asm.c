@@ -33,6 +33,7 @@ bool context_minimal_init(context_t *context, int argc, char **argv) {
 
 void shutdown(context_t *context, int exit_code) {
         context_minimal_clear(context);
+        context_assembler_clear(context);
         exit(exit_code);
 }
 

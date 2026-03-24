@@ -31,6 +31,8 @@ typedef struct context_s {
         semantizer_t semantizer;
 } context_t;
 
+void context_assembler_clear(context_t *context);
+
 typedef struct symbol_s {
         char *name;
         uint32_t section;
