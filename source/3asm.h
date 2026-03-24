@@ -172,14 +172,20 @@ typedef enum generator_status_e {
         GENERATOR_OK,
         GENERATOR_UNEXPECTED,
         GENERATOR_INVALID_SECTION,
-        GENERATOR_BLOCK_WRITE
+        GENERATOR_BLOCK_WRITE,
+        GENERATOR_INVALID_OPERAND_COUNT,
+        GENERATOR_WRONG_OFFSET,
+        GENERATOR_INVALID_FLAGS
 } generator_status_t;
 
 static const char *generator_error_messages[] = {
         "OK.",
         "Unexpected semantic unit.",
         "Invalid section.",
-        "You can't write to the block section."
+        "You can't write to the block section.",
+        "Invalid operand count.",
+        "Wrong offsetted operand.",
+        "Invalid flags.",
 };
 
 typedef struct generator_result_s {
