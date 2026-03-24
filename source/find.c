@@ -28,7 +28,7 @@ const instruction_descriptor_t *instruction_find(char *mnemonic) {
 	return nullptr;
 }
 
-ssize_t instruction_flag_find(char symbol, instruction_descriptor_t *descriptor) {
+ssize_t instruction_flag_find(char symbol, const instruction_descriptor_t *descriptor) {
 	for(ssize_t i = 0; i < descriptor->flag_count; i++) {
 		if(descriptor->flags[i].symbol == symbol) return i; 
 	}
