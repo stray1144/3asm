@@ -2,7 +2,7 @@ CC = clang
 CFLAGS = -std=c23 -Wall -Wextra -Wpedantic
 
 LIBRARIES := -lvacant -lcxsh
-SOURCE := source/3asm.c source/log.c source/assembler.c source/atomics.c source/patterns.c source/find.c source/generator.c
+SOURCE := source/3asm.c source/log.c source/assembler.c source/atomics.c source/patterns.c source/find.c source/generator.c source/output.c
 OBJECTS := $(patsubst source/%.c, build/objects/%.o, $(SOURCE))
 
 PREFIX ?= /usr

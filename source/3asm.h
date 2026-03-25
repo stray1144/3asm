@@ -164,6 +164,8 @@ typedef struct translation_unit_s {
         uint32_t actual_section;
 } translation_unit_t;
 
+void translation_unit_write(context_t *context, translation_unit_t *translation_unit);
+
 bool translation_unit_init(translation_unit_t *translation_unit, char *name);
 void translation_unit_clear(translation_unit_t *translation_unit);
 

@@ -70,6 +70,9 @@ int main(int argc, char **argv) {
                 shutdown(&context, -1);
         }
 
+
+        translation_unit_write(&context, &translation_unit);
+
         translation_unit_clear(&translation_unit);
 
         shutdown(&context, 0);
