@@ -71,7 +71,6 @@ bool context_assembler_init(context_t *context, char *source_path) {
         return true;
 }
 
-
 void translation_unit_clear(translation_unit_t *translation_unit) {
         if(translation_unit == nullptr) return;
 

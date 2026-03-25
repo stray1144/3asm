@@ -221,13 +221,3 @@ generator_result_t generate(translation_unit_t *output, semantizer_t *source) {
 
         return result;
 }
-
-
-
-
-
-
-
-
-
-
