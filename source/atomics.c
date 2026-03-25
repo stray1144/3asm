@@ -34,7 +34,7 @@ bool forge_comment_handle(semantizer_unit_t *unit, lexer_token_t *token) {
 bool forge_string_handle(semantizer_unit_t *unit, lexer_token_t *token) {
         if(token->kind != LEXER_TOKEN_STRING_LITERAL) return false;
 
-        semantizer_unit_init(unit, SEMANTIC_STRING, strndup(token->string.base, token->string.length), free);
+        semantizer_unit_init(unit, SEMANTIC_STRING, strndup(token->string.base + 1, token->string.length - 2), free);
         semantizer_token_trace(unit, token);
 
         return true;
