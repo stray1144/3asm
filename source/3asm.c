@@ -54,6 +54,7 @@ int main(int argc, char **argv) {
         if(parameter_probe(&context.AP, "debug", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_DEBUG);
         if(parameter_probe(&context.AP, "quiet", PARAMETER_FLAG)) logger_level_change(&context.logger, LOGGER_SILENT);
         if(parameter_probe(&context.AP, "timestamp", PARAMETER_FLAG)) context.settings.logger_timestamp = true;
+        context.settings.output_file = parameter_optional_get(&context.AP, "output", "output.cxo");
 
         translation_unit_t translation_unit = {0};
 
