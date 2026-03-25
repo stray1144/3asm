@@ -14,7 +14,6 @@
 
 typedef struct settings_s {
         char *output_file;
-        char *entry_symbol;
 
         bool logger_timestamp;
 } settings_t;
