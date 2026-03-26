@@ -107,6 +107,8 @@ bool translation_unit_init(translation_unit_t *translation_unit, char *name) {
         result &= buffer_init(&translation_unit->symbols, sizeof(symbol_t));
         result &= buffer_init(&translation_unit->relocations, sizeof(symbol_t));
 
+        translation_unit->actual_section = REO_LOCATION_CODE;
+
         return result;
 }
 
