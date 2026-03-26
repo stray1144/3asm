@@ -1,5 +1,6 @@
 #include "3asm.h"
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <strings.h>
 
@@ -48,6 +49,24 @@ generator_result_t generator_section_handle(translation_unit_t *output, semantiz
         else if(strcasecmp(string, "data") == 0) output->actual_section = REO_LOCATION_DATA;
         else if(strcasecmp(string, "block") == 0) output->actual_section = REO_LOCATION_BLOCK;
         else return generator_result(GENERATOR_INVALID_SECTION, i);
+
+        return generator_result(GENERATOR_OK, i);
+}
+
+size_t generator_size_calculate(uint64_t number) {
+        if(number == 0) return 1;
+        return 1 << ((64 - (number << 63) ? __builtin_ctzll(number) : __builtin_clzll(number)) / 8);
+}
+
+generator_result_t generator_store_handle(translation_unit_t *output, semantizer_t *source, uint32_t i) {
+        store_representation_t *representation = nullptr;
+        semantizer_stream_peek(source, i, (void *)&representation, nullptr);
+
+        size_t size = representation->size;
+        if(size == 0) size = generator_size_calculate(representation->value);
+        if(size > 8) size = 8;
+
+        generator_emit_data(output, &representation->value, size);
 
         return generator_result(GENERATOR_OK, i);
 }
@@ -178,6 +197,10 @@ generator_result_t generator_process(translation_unit_t *output, semantizer_t *s
         switch(semantizer_stream_get(source, i)) {
                 case SEMANTIC_SECTION_DIRECTIVE:
                 result = generator_section_handle(output, source, i);
+                break;
+
+                case SEMANTIC_STORE_DIRECTIVE:
+                result = generator_store_handle(output, source, i);
                 break;
 
                 case SEMANTIC_STRING_DIRECTIVE:
