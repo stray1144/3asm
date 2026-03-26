@@ -154,9 +154,44 @@ size_t section_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *uni
         return 3;
 }
 
+bool store_directive_match(semantizer_t *semantizer, size_t start) {
+        if(semantizer_stream_match(semantizer, start, SEMANTIC_DIRECTIVE_MNEMONIC) == false) return false;
 
+        char *string = nullptr;
+        semantizer_stream_peek(semantizer, start, (void *)&string, nullptr);
 
+        bool a = semantizer_stream_match(semantizer, start + 1, SEMANTIC_NUMBER);
+        bool b = semantizer_stream_match(semantizer, start + 1, SEMANTIC_SIZE_DEFINITION) &&
+                 semantizer_stream_match(semantizer, start + 2, SEMANTIC_NUMBER);
 
+        return  strcasecmp(string, "store") == 0 && (a || b);
+}
+
+size_t store_directive_reduct(semantizer_t *semantizer, semantizer_unit_t *unit, size_t start) {
+        uint64_t consumed = 2;
+        
+        store_representation_t *representation = calloc(1, sizeof(store_representation_t));
+        
+        uint64_t *size = nullptr;
+        uint64_t *value = nullptr;
+        
+        if(semantizer_stream_match(semantizer, start + 1, SEMANTIC_SIZE_DEFINITION)) {
+                semantizer_stream_steal(semantizer, start + 1, (void *)&size, nullptr);
+                semantizer_stream_steal(semantizer, start + 2, (void *)&value, nullptr);
+                consumed++;
+        }
+        else {
+                semantizer_stream_steal(semantizer, start + 1, (void *)&value, nullptr);
+        }
+        
+        if(value) representation->value = *value;
+        if(size) representation->size = *size; 
+        
+        semantizer_unit_init(unit, SEMANTIC_STORE_DIRECTIVE, representation, free);
+        semantizer_stream_trace(semantizer, unit, start);
+
+        return consumed;
+}
 
 bool string_directive_match(semantizer_t *semantizer, size_t start) {
         if(semantizer_stream_match(semantizer, start, SEMANTIC_DIRECTIVE_MNEMONIC) == false) return false;
@@ -381,7 +416,7 @@ semantizer_pattern_t patterns[PATTERN_COUNT] = {
         PATTERN(reference_operand, 0),
 
         PATTERN(section_directive, 1),
-        // store_directive
+        PATTERN(store_directive, 1),
         PATTERN(string_directive, 1),
         PATTERN(blank_directive, 1),
 

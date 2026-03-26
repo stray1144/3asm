@@ -126,7 +126,7 @@ static char *semantic_names[] = {
 extern semantizer_forge_callback_t *forge_callbacks[FORGE_CALLBACK_COUNT];
 
 #define LEVEL_COUNT 7
-#define PATTERN_COUNT 16
+#define PATTERN_COUNT 17
 extern semantizer_pattern_t patterns[PATTERN_COUNT];
 
 typedef struct operand_representation_s {
@@ -148,6 +148,11 @@ typedef struct instruction_representation_s {
         instruction_mnemonic_t *mnemonic;
         buffer_t *operand_list;
 } instruction_representation_t;
+
+typedef struct store_representation_s {
+        size_t size;
+        uint64_t value;
+} store_representation_t;
 
 bool directive_mnemonic_exists(char *mnemonic);
 const instruction_descriptor_t *instruction_find(char *mnemonic);
