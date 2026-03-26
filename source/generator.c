@@ -124,19 +124,18 @@ uint8_t generator_size_encode(uint32_t size) {
         return (31 - __builtin_clzll(size));
 }
 
-void generator_size_calculate(operand_representation_t *operand) {
+
+
+void generator_operand_size(operand_representation_t *operand) {
         if(operand->operand_size != 0) return; // the developer may have given a size, trust them.
 
-        operand->operand_size = 1;
-
-        if(operand->payload == 0) return;
-        operand->operand_size = 1 << ((64 - (operand->payload << 63) ? __builtin_ctzll(operand->payload) : __builtin_clzll(operand->payload)) / 8);
+        operand->operand_size = generator_size_calculate(operand->payload); 
 
         if(operand->kind & OPERAND_REFERENCE) operand->operand_size = 8;
 }
 
 void generator_operand_write(translation_unit_t *output, operand_representation_t *operand, operand_kind_t kind) {
-        generator_size_calculate(operand);
+        generator_operand_size(operand);
 
         encoded_descriptor_t eod = {operand->kind & (OPERAND_REGISTER | OPERAND_VECTOR) ? operand->register_descriptor->encoding : 0, generator_size_encode(operand->operand_size)};
 
