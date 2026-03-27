@@ -1,3 +1,6 @@
+# Alert!
+This is an unfinished research project! Expect errors and experimental design.
+
 # Overview
 3Asm ("ARCx Assembler A sm" where the "sm" doesn't really mean anything) is a assembler for the ARCx MK.II ISA
 
