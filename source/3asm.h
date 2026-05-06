@@ -202,7 +202,14 @@ typedef struct generator_result_s {
         uint32_t at;
 } generator_result_t;
 
-generator_result_t generate(translation_unit_t *output, semantizer_t *source);
+typedef struct generator_s {
+        translation_unit_t *output;
+        semantizer_t *source;
+        symbol_t *working_symbol;
+} generator_t;
+
+
+generator_result_t generate(generator_t *generator);
 
 #define SYSTEM_LOGGER(name) system_##name(context_t *context, char *prefix, char *format, ...)
 

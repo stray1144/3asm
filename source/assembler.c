@@ -174,7 +174,11 @@ bool translation_unit_assemble(context_t *context, translation_unit_t *translati
         semantizer_pattern_setup(&context->semantizer, patterns, PATTERN_COUNT, LEVEL_COUNT);
         semantize(&context->semantizer);
 
-        generator_result_t generator_result = generate(translation_unit, &context->semantizer);
+        generator_t generator = {0};
+        generator.source = &context->semantizer;
+        generator.output = translation_unit;
+
+        generator_result_t generator_result = generate(&generator);
         if(generator_result.status  != GENERATOR_OK) {
                 semantizer_unit_t *at = buffer_get(&context->semantizer.stream, generator_result.at);
                 lexer_position_t line;
