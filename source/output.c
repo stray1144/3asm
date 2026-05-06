@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 void output_symbol_build(reo_file_t *file, symbol_t *symbol) {
-        reo_symbol_add(file, reo_string_add(file, symbol->name), symbol->location, (reo_symbol_type_t) {false, false, false, symbol->section, 0});
+        reo_symbol_add(file, reo_string_add(file, symbol->name), symbol->start, symbol->size, (reo_symbol_type_t) {false, false, false, symbol->section, 0});
 }
 
 void output_relocation_build(reo_file_t *file, symbol_t *relocation) {
-        reo_relocation_add(file, reo_string_add(file, relocation->name), relocation->location, REO_RELOCATION_ABSOLUTE);
+        reo_relocation_add(file, reo_string_add(file, relocation->name), relocation->start, REO_RELOCATION_ABSOLUTE);
 }
 
 void translation_unit_write(context_t *context, translation_unit_t *translation_unit) {

@@ -35,7 +35,8 @@ void context_assembler_clear(context_t *context);
 typedef struct symbol_s {
         char *name;
         uint32_t section;
-        reo_offset_t location;
+        reo_offset_t start;
+        reo_size_t size;
 } symbol_t;
 
 enum semantizer_unit_kind_e : uint32_t {
