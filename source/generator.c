@@ -177,9 +177,9 @@ void generator_operand_write(generator_t *generator, operand_representation_t *o
         generator_emit_data(generator, &eod, 1);
 
         if(operand->kind & OPERAND_REFERENCE) {
-                symbol_t symbol = {operand->symbol_name, generator->output->actual_section, generator_section_offset(generator->output), 0};
+                relocation_t relocation = {operand->symbol_name, generator->working_symbol->name, generator->working_symbol->size};
 
-                buffer_append(&generator->output->relocations, &symbol, 1);
+                buffer_append(&generator->output->relocations, &relocation, 1);
         }
         
         if(kind & (OPERAND_IMMEDIATE | OPERAND_OFFSET_FLAG)) generator_emit_data(generator, &operand->payload, operand->operand_size); 

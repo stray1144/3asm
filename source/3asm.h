@@ -39,6 +39,12 @@ typedef struct symbol_s {
         reo_size_t size;
 } symbol_t;
 
+typedef struct relocation_s {
+        char *patch;
+        char *target;
+        reo_offset_t addend;
+} relocation_t;
+
 enum semantizer_unit_kind_e : uint32_t {
         SEMANTIC_UNKNOWN,
         SEMANTIC_IDENTIFIER,

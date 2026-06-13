@@ -5,8 +5,8 @@ void output_symbol_build(reo_file_t *file, symbol_t *symbol) {
         reo_symbol_add(file, reo_string_add(file, symbol->name), symbol->start, symbol->size, (reo_symbol_type_t) {false, false, false, symbol->section, 0});
 }
 
-void output_relocation_build(reo_file_t *file, symbol_t *relocation) {
-        reo_relocation_add(file, reo_string_add(file, relocation->name), relocation->start, REO_RELOCATION_ABSOLUTE);
+void output_relocation_build(reo_file_t *file, relocation_t *relocation) {
+        reo_relocation_add(file, reo_string_add(file, relocation->patch), reo_string_add(file, relocation->target), relocation->addend);
 }
 
 void translation_unit_write(context_t *context, translation_unit_t *translation_unit) {
@@ -25,7 +25,7 @@ void translation_unit_write(context_t *context, translation_unit_t *translation_
         }
 
         for(size_t i = 0; i < translation_unit->relocations.used; i++) {
-                symbol_t *relocation = buffer_get(&translation_unit->relocations, i);
+                relocation_t *relocation = buffer_get(&translation_unit->relocations, i);
                 output_relocation_build(&file, relocation);
         }
 
