@@ -69,11 +69,11 @@ static const instruction_descriptor_t instruction_lut[INSTRUCTION_COUNT] = {
         // TODO: add the new instructions from the new unredacted spec update... (and BuRST)
         
         // .5 Bit Operations
-        {"count"    , 0x27, 2, {{'t', 1 << 0}, {'p', 1 << 1}}, 1, {OPERAND_WHATEVER}},
-        {"bswap"    , 0x28, 0, {}, 1, {OPERAND_WHATEVER}},
-        {"bextract" , 0x29, 0, {}, 3, {OPERAND_WHATEVER, OPERAND_VALUE, OPERAND_VALUE}},
-        {"binsert"  , 0x2A, 0, {}, 4, {OPERAND_WHATEVER, OPERAND_REGISTER, OPERAND_VALUE, OPERAND_VALUE}},
-        {"sextend"  , 0x2B, 0, {}, 1, {OPERAND_WHATEVER}},
+        {"count"    , 0x2D, 2, {{'t', 1 << 0}, {'p', 1 << 1}}, 1, {OPERAND_WHATEVER}},
+        {"bswap"    , 0x2E, 0, {}, 1, {OPERAND_WHATEVER}},
+        {"bextract" , 0x2F, 0, {}, 3, {OPERAND_WHATEVER, OPERAND_VALUE, OPERAND_VALUE}},
+        {"binsert"  , 0x30, 0, {}, 4, {OPERAND_WHATEVER, OPERAND_REGISTER, OPERAND_VALUE, OPERAND_VALUE}},
+        {"sextend"  , 0x31, 0, {}, 1, {OPERAND_WHATEVER}},
 
         // .6 Control Operations
 
